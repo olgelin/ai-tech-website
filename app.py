@@ -58,22 +58,5 @@ def login():
 def booking():
     return render_template('booking.html')
 
-# 解决循环导入问题：在需要使用模型的地方再导入
-# 注意：在实际生产环境中，可能需要考虑更复杂的重构方案
-
-# 错误处理 - 404
-@app.errorhandler(404)
-def page_not_found(e):
-    return jsonify({'error': '页面不存在'}), 404
-
-# 错误处理 - 500
-@app.errorhandler(500)
-def server_error(e):
-    return jsonify({'error': '服务器内部错误'}), 500
-
 if __name__ == '__main__':
-    # 创建数据库表
-    with app.app_context():
-        db.create_all()
-    # 运行应用
-    app.run(host='0.0.0.0', port=int(os.getenv('PORT', 5000)), debug=True)
+    app.run(debug=os.getenv('DEBUG', False), port=os.getenv('PORT', 5000))
