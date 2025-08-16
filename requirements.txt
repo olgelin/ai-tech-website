@@ -1,0 +1,7 @@
+Flask==2.3.3  # Web框架
+Flask-SQLAlchemy==3.1.1  # 数据库ORM
+Flask-Migrate==4.0.7  # 数据库迁移工具
+Flask-Cors==4.0.0  # 处理跨域请求
+pymysql==1.1.0  # MySQL驱动
+python-dotenv==1.0.0  # 环境变量管理
+gunicorn==21.2.0  # 生产服务器（可选）

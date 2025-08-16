@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>关于我们 | AI科技</title>
+    <!-- 引入Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- 引入Font Awesome图标 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- 自定义Tailwind配置 -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#3b82f6',
+                        secondary: '#1e293b',
+                        dark: '#0f172a'
+                    },
+                    fontFamily: {
+                        inter: ['Inter', 'system-ui', 'sans-serif'],
+                    },
+                },
+            }
+        }
+    </script>
+    <!-- 自定义工具类 -->
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .content-auto {
+                content-visibility: auto;
+            }
+        }
+    </style>
+    <style>
+        /* 页面加载动画 */
+        .loader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #0f172a;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 0.5s ease-out;
+        }
+        .loader.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+        .loader .line {
+            width: 40px;
+            height: 2px;
+            background: #3b82f6;
+            margin: 0 5px;
+            animation: line-grow 1.2s ease-in-out infinite;
+        }
+        .loader .line:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+        .loader .line:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+        @keyframes line-grow {
+            0% {
+                transform: scaleX(0);
+                transform-origin: left;
+            }
+            50% {
+                transform: scaleX(1);
+                transform-origin: left;
+            }
+            50.1% {
+                transform-origin: right;
+            }
+            100% {
+                transform: scaleX(0);
+                transform-origin: right;
+            }
+        }
+        /* 平滑滚动 */
+        html {
+            scroll-behavior: smooth;
+        }
+    </style>
+</head>
+<body class="font-inter bg-dark text-white overflow-x-hidden">
+    <!-- 加载动画 -->
+    <div class="loader" id="loader">
+        <div class="line"></div>
+        <div class="line"></div>
+        <div class="line"></div>
+    </div>
+
+    <!-- 导航栏 -->
+    <header class="fixed w-full bg-dark/90 backdrop-blur-sm z-50 transition-all duration-300" id="navbar">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center py-4">
+                <a href="index.html" class="flex items-center space-x-2">
+                    <div class="w-10 h-10 bg-primary rounded-lg flex items-center justify-center text-white">
+                        <i class="fas fa-robot text-xl"></i>
+                    </div>
+                    <span class="text-xl font-bold text-white">AI科技</span>
+                </a>
+                <nav class="hidden md:flex space-x-8">
+                    <a href="index.html" class="font-medium text-white hover:text-primary transition-colors duration-300">首页</a>
+                    <a href="about.html" class="font-medium text-primary border-b-2 border-primary pb-1 transition-colors duration-300">关于我们</a>
+                    <a href="booking.html" class="font-medium text-white hover:text-primary transition-colors duration-300">预约</a>
+                </nav>
+                <div class="flex items-center space-x-4">
+                    <a href="login.html" class="hidden md:inline-block px-5 py-2 rounded-lg border border-primary text-primary font-medium hover:bg-primary hover:text-white transition-colors duration-300">登录</a>
+                    <button class="md:hidden text-white" id="menu-toggle">
+                        <i class="fas fa-bars text-xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <!-- 移动端菜单 -->
+        <div class="md:hidden hidden bg-secondary absolute w-full left-0 top-full" id="mobile-menu">
+            <div class="container mx-auto px-4 py-3 space-y-3">
+                <a href="index.html" class="block py-2 font-medium text-white hover:text-primary transition-colors duration-300">首页</a>
+                <a href="about.html" class="block py-2 font-medium text-primary border-l-2 border-primary pl-2 transition-colors duration-300">关于我们</a>
+                <a href="booking.html" class="block py-2 font-medium text-white hover:text-primary transition-colors duration-300">预约</a>
+                <a href="login.html" class="block py-2 font-medium text-primary hover:text-primary/80 transition-colors duration-300">登录</a>
+            </div>
+        </div>
+    </header>
+
+    <main class="pt-24">
+        <!-- 页面标题 -->
+        <section class="py-10">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex flex-col items-center text-center">
+                    <h1 class="text-3xl md:text-4xl font-bold text-white mb-4">关于我们</h1>
+                    <div class="w-20 h-1 bg-primary mx-auto"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 企业简介 -->
+        <section class="py-16 md:py-24">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8 max-w-6xl">
+                <div class="grid md:grid-cols-2 gap-12 items-center">
+                    <div class="order-2 md:order-1">
+                        <h2 class="text-2xl md:text-3xl font-bold text-white mb-6">企业简介</h2>
+                        <p class="text-white/80 mb-6 leading-relaxed">
+                            AI科技成立于2018年，是一家专注于人工智能技术研发与应用的高科技企业。我们致力于为企业提供高效、可靠的AI智能体开发与企业AI工作赋能解决方案，帮助企业实现智能化转型，提升核心竞争力。
+                        </p>
+                        <p class="text-white/80 mb-8 leading-relaxed">
+                            五年来，我们已为制造、电商、医疗、金融等多个行业的上百家企业提供了AI解决方案，帮助他们降低成本、提高效率、优化决策，实现了显著的业务增长。
+                        </p>
+                        <div class="flex flex-wrap gap-4">
+                            <div class="flex items-center space-x-2">
+                                <div class="w-10 h-10 bg-primary/10 rounded-full flex items-center justify-center text-primary">
+                                    <i class="fas fa-users"></i>
+                                </div>
+                                <span class="text-white/80"><strong>50+</strong> AI专家</span>
+                            </div>
+                            <div class="flex items-center space-x-2">
+                                <div class="w-10 h-10 bg-primary/10 rounded-full flex items-center justify-center text-primary">
+                                    <i class="fas fa-building"></i>
+                                </div>
+                                <span class="text-white/80"><strong>100+</strong> 企业客户</span>
+                            </div>
+                            <div class="flex items-center space-x-2">
+                                <div class="w-10 h-10 bg-primary/10 rounded-full flex items-center justify-center text-primary">
+                                    <i class="fas fa-trophy"></i>
+                                </div>
+                                <span class="text-white/80"><strong>20+</strong> 技术专利</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="order-1 md:order-2 bg-secondary/20 rounded-2xl p-8 flex items-center justify-center h-80 transition-all duration-500">
+                        <i class="fas fa-lightbulb text-20xl text-primary/20"></i>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 团队优势 -->
+        <section class="py-16 md:py-24">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-16">
+                    <h2 class="text-3xl md:text-4xl font-bold text-white mb-4">团队优势</h2>
+                    <div class="w-20 h-1 bg-primary mx-auto"></div>
+                    <p class="text-white/70 mt-4 max-w-2xl mx-auto">
+                        我们的核心团队由来自顶尖高校和科技企业的AI专家组成，拥有深厚的技术积累和丰富的行业经验
+                    </p>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+                    <!-- 优势1 -->
+                    <div class="bg-secondary rounded-xl p-8 transition-all duration-300 border border-gray-700">
+                        <div class="w-16 h-16 bg-primary/10 rounded-lg flex items-center justify-center mb-6 text-primary">
+                            <i class="fas fa-graduation-cap text-2xl"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-white mb-3">顶尖人才</h3>
+                        <p class="text-white/70">
+                            团队核心成员均毕业于清华大学、北京大学、麻省理工等国内外知名高校，拥有博士或硕士学位，平均AI领域工作经验8年以上。
+                        </p>
+                    </div>
+
+                    <!-- 优势2 -->
+                    <div class="bg-secondary rounded-xl p-8 transition-all duration-300 border border-gray-700">
+                        <div class="w-16 h-16 bg-primary/10 rounded-lg flex items-center justify-center mb-6 text-primary">
+                            <i class="fas fa-microchip text-2xl"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-white mb-3">技术创新</h3>
+                        <p class="text-white/70">
+                            持续进行AI核心技术研发，在自然语言处理、计算机视觉、机器学习等领域拥有多项自主研发的核心算法和技术专利。
+                        </p>
+                    </div>
+
+                    <!-- 优势3 -->
+                    <div class="bg-secondary rounded-xl p-8 transition-all duration-300 border border-gray-700">
+                        <div class="w-16 h-16 bg-primary/10 rounded-lg flex items-center justify-center mb-6 text-primary">
+                            <i class="fas fa-handshake text-2xl"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-white mb-3">行业经验</h3>
+                        <p class="text-white/70">
+                            深入了解各行业痛点与需求，拥有丰富的行业解决方案经验，能够为不同行业客户提供定制化的AI解决方案。
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 发展历程 -->
+        <section class="py-16 md:py-24">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8 max-w-4xl">
+                <div class="text-center mb-16">
+                    <h2 class="text-3xl md:text-4xl font-bold text-white mb-4">发展历程</h2>
+                    <div class="w-20 h-1 bg-primary mx-auto"></div>
+                </div>
+                <div class="relative">
+                    <!-- 时间线 -->
+                    <div class="absolute left-0 md:left-1/2 transform md:-translate-x-1/2 h-full w-1 bg-primary/20"></div>
+
+                    <!-- 2018 -->
+                    <div class="relative mb-12 md:mb-24 flex flex-col md:flex-row md:justify-between items-start">
+                        <div class="md:w-5/12 mb-4 md:mb-0 md:text-right order-2 md:order-1">
+                            <h3 class="text-xl font-bold text-white mb-2">公司成立</h3>
+                            <p class="text-white/70">\                                AI科技在北京市海淀区正式成立，专注于人工智能技术研发与应用。\                            </p>
+                        </div>
+                        <div class="absolute left-0 md:left-1/2 transform md:-translate-x-1/2 w-6 h-6 rounded-full bg-primary border-4 border-dark"></div>
+                        <div class="md:w-5/12 order-1 md:order-2 pl-8 md:pl-0"><span class="text-xl font-bold text-primary">2018</span></div>
+                    </div>
+
+                    <!-- 2019 -->
+                    <div class="relative mb-12 md:mb-24 flex flex-col md:flex-row md:justify-between items-start">
+                        <div class="md:w-5/12 mb-4 md:mb-0 md:text-right order-2 md:order-1"><span class="text-xl font-bold text-primary">2019</span></div>
+                        <div class="absolute left-0 md:left-1/2 transform md:-translate-x-1/2 w-6 h-6 rounded-full bg-primary border-4 border-dark"></div>
+                        <div class="md:w-5/12 order-1 md:order-2 pl-8 md:pl-0">\                            <h3 class="text-xl font-bold text-white mb-2">首款产品发布</h3>
+                            <p class="text-white/70">\                                发布首款智能客服产品，成功应用于某大型制造企业，获得市场广泛认可。\                            </p>
+                        </div>
+                    </div>
+
+                    <!-- 2020 -->
+                    <div class="relative mb-12 md:mb-24 flex flex-col md:flex-row md:justify-between items-start">
+                        <div class="md:w-5/12 mb-4 md:mb-0 md:text-right order-2 md:order-1">\                            <h3 class="text-xl font-bold text-white mb-2">扩展产品线</h3>
+                            <p class="text-white/70">\                                推出AI智能体开发平台和企业AI工作赋能解决方案，产品线进一步完善。\                            </p>
+                        </div>
+                        <div class="absolute left-0 md:left-1/2 transform md:-translate-x-1/2 w-6 h-6 rounded-full bg-primary border-4 border-dark"></div>
+                        <div class="md:w-5/12 order-1 md:order-2 pl-8 md:pl-0"><span class="text-xl font-bold text-primary">2020</span></div>
+                    </div>
+
+                    <!-- 2022 -->
+                    <div class="relative mb-12 md:mb-24 flex flex-col md:flex-row md:justify-between items-start">
+                        <div class="md:w-5/12 mb-4 md:mb-0 md:text-right order-2 md:order-1"><span class="text-xl font-bold text-primary">2022</span></div>
+                        <div class="absolute left-0 md:left-1/2 transform md:-translate-x-1/2 w-6 h-6 rounded-full bg-primary border-4 border-dark"></div>
+                        <div class="md:w-5/12 order-1 md:order-2 pl-8 md:pl-0">\                            <h3 class="text-xl font-bold text-white mb-2">获得融资</h3>
+                            <p class="text-white/70">\                                完成A轮融资，金额1亿元人民币，进一步加速技术研发和市场拓展。\                            </p>
+                        </div>
+                    </div>
+
+                    <!-- 2023 -->
+                    <div class="relative flex flex-col md:flex-row md:justify-between items-start">
+                        <div class="md:w-5/12 mb-4 md:mb-0 md:text-right order-2 md:order-1">\                            <h3 class="text-xl font-bold text-white mb-2">业务拓展</h3>
+                            <p class="text-white/70">\                                客户数量突破100家，业务覆盖制造、电商、医疗、金融等多个行业。\                            </p>
+                        </div>
+                        <div class="absolute left-0 md:left-1/2 transform md:-translate-x-1/2 w-6 h-6 rounded-full bg-primary border-4 border-dark"></div>
+                        <div class="md:w-5/12 order-1 md:order-2 pl-8 md:pl-0"><span class="text-xl font-bold text-primary">2023</span></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 行动号召 -->
+        <section class="py-16 md:py-24">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="max-w-4xl mx-auto bg-primary rounded-2xl overflow-hidden">\                    <div class="grid md:grid-cols-2">\                        <div class="p-8 md:p-12 flex flex-col justify-center">\                            <h2 class="text-2xl md:text-3xl font-bold text-white mb-4">\                                与我们一起开启AI赋能之旅
+                            </h2>\                            <p class="text-white/80 mb-8">\                                联系我们，了解如何通过AI技术提升您的企业效率与竞争力
+                            </p>\                            <a href="booking.html" class="px-6 py-3 bg-white text-primary font-medium rounded-lg hover:bg-white/90 transition-colors duration-300 self-start">\                                立即预约
+                            </a>\                        </div>\                        <div class="hidden md:block bg-primary/20 p-8 flex items-center justify-center">\                            <i class="fas fa-handshake text-20xl text-white/20"></i>\                        </div>\                    </div>\                </div>\            </div>
+        </section>
+    </main>
+
+    <!-- 页脚 -->
+    <footer class="bg-dark text-white py-12">\        <div class="container mx-auto px-4 sm:px-6 lg:px-8">\            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">\                <div class="md:col-span-1">\                    <div class="flex items-center space-x-2 mb-4">\                        <div class="w-10 h-10 bg-white rounded-lg flex items-center justify-center text-primary">\                            <i class="fas fa-robot text-xl"></i>\                        </div>\                        <span class="text-xl font-bold text-white">AI科技</span>\                    </div>\                    <p class="text-white/60 mb-4">\                        专注AI智能体开发与企业AI工作赋能
+                    </p>\                    <div class="flex space-x-4">\                        <a href="#" class="text-white/60 hover:text-white transition-colors duration-300">\                            <i class="fab fa-weixin text-xl"></i>\                        </a>\                        <a href="#" class="text-white/60 hover:text-white transition-colors duration-300">\                            <i class="fab fa-weibo text-xl"></i>\                        </a>\                        <a href="#" class="text-white/60 hover:text-white transition-colors duration-300">\                            <i class="fab fa-linkedin text-xl"></i>\                        </a>\                    </div>\                </div>\                <div>\                    <h3 class="text-lg font-bold mb-4">快速链接</h3>\                    <ul class="space-y-2">\                        <li><a href="index.html" class="text-white/60 hover:text-white transition-colors duration-300">首页</a></li>\                        <li><a href="about.html" class="text-white/60 hover:text-white transition-colors duration-300">关于我们</a></li>\                        <li><a href="#services" class="text-white/60 hover:text-white transition-colors duration-300">业务服务</a></li>\                        <li><a href="booking.html" class="text-white/60 hover:text-white transition-colors duration-300">预约定制</a></li>\                    </ul>\                </div>\                <div>\                    <h3 class="text-lg font-bold mb-4">联系我们</h3>\                    <ul class="space-y-2">\                        <li class="flex items-start space-x-2">\                            <i class="fas fa-map-marker-alt text-white/60 mt-1"></i>\                            <span class="text-white/60">北京市海淀区科技园区</span>\                        </li>\                        <li class="flex items-center space-x-2">\                            <i class="fas fa-phone text-white/60"></i>\                            <span class="text-white/60">400-123-4567</span>\                        </li>\                        <li class="flex items-center space-x-2">\                            <i class="fas fa-envelope text-white/60"></i>\                            <span class="text-white/60">contact@aitech.com</span>\                        </li>\                    </ul>\                </div>\                <div>\                    <h3 class="text-lg font-bold mb-4">法律信息</h3>\                    <ul class="space-y-2">\                        <li><a href="#" class="text-white/60 hover:text-white transition-colors duration-300">隐私政策</a></li>\                        <li><a href="#" class="text-white/60 hover:text-white transition-colors duration-300">服务条款</a></li>\                        <li><a href="#" class="text-white/60 hover:text-white transition-colors duration-300">法律声明</a></li>\                    </ul>\                </div>\            </div>\            <div class="border-t border-white/10 mt-10 pt-6 text-center text-white/40 text-sm">\                <p>© 2023 AI科技. 保留所有权利.</p>\            </div>\        </div>\    </footer>
+
+    <script>
+        // 页面加载动画
+        window.addEventListener('load', function() {
+            setTimeout(function() {
+                document.getElementById('loader').classList.add('hidden');
+            }, 1000);
+        });
+
+        // 导航栏滚动效果
+        window.addEventListener('scroll', function() {
+            const navbar = document.getElementById('navbar');
+            if (window.scrollY > 50) {
+                navbar.classList.add('py-2');
+                navbar.classList.add('shadow');
+                navbar.classList.remove('py-4');
+            } else {
+                navbar.classList.add('py-4');
+                navbar.classList.remove('py-2');
+                navbar.classList.remove('shadow');
+            }
+        });
+
+        // 移动端菜单切换
+        document.getElementById('menu-toggle').addEventListener('click', function() {
+            const mobileMenu = document.getElementById('mobile-menu');
+            mobileMenu.classList.toggle('hidden');
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>登录 | AI科技</title>
+    <!-- 引入Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- 引入Font Awesome图标 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- 自定义Tailwind配置 -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#3b82f6',
+                        secondary: '#1e293b',
+                        dark: '#0f172a',
+                        light: '#f8fafc'
+                    },
+                    fontFamily: {
+                        inter: ['Inter', 'system-ui', 'sans-serif'],
+                    },
+                },
+            }
+        }
+    </script>
+    <!-- 自定义工具类 -->
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .content-auto {
+                content-visibility: auto;
+            }
+            .hover-scale {
+                transition: transform 0.3s ease;
+            }
+            .hover-scale:hover {
+                transform: scale(1.03);
+            }
+        }
+    </style>
+    <style>
+        /* 页面加载动画 */
+        .loader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #0f172a;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 0.5s ease-out;
+        }
+        .loader.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+        .loader .line {
+            width: 40px;
+            height: 2px;
+            background: #3b82f6;
+            margin: 0 5px;
+            animation: line-grow 1.2s ease-in-out infinite;
+        }
+        .loader .line:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+        .loader .line:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+        @keyframes line-grow {
+            0% {
+                transform: scaleX(0);
+                transform-origin: left;
+            }
+            50% {
+                transform: scaleX(1);
+                transform-origin: left;
+            }
+            50.1% {
+                transform-origin: right;
+            }
+            100% {
+                transform: scaleX(0);
+                transform-origin: right;
+            }
+        }
+        /* 平滑滚动 */
+        html {
+            scroll-behavior: smooth;
+        }
+        /* 表单输入框焦点效果 */
+        .form-input:focus {
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+            border-color: #3b82f6;
+        }
+        /* 提示弹窗 */
+        .toast {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #10B981;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 6px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+            z-index: 10000;
+            opacity: 0;
+            transition: opacity 0.3s ease, transform 0.3s ease;
+            transform: translateX(-50%) translateY(-20px);
+        }
+        .toast.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
+    </style>
+</head>
+<body class="font-inter bg-dark text-light overflow-x-hidden">
+    <!-- 加载动画 -->
+    <div class="loader" id="loader">
+        <div class="line"></div>
+        <div class="line"></div>
+        <div class="line"></div>
+    </div>
+
+    <!-- 导航栏 -->
+    <header class="fixed w-full bg-dark/90 backdrop-blur-sm z-50 transition-all duration-300" id="navbar">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center py-4">
+                <a href="index.html" class="flex items-center space-x-2">
+                    <div class="w-10 h-10 bg-primary rounded-lg flex items-center justify-center text-white">
+                        <i class="fas fa-robot text-xl"></i>
+                    </div>
+                    <span class="text-xl font-bold text-white">AI科技</span>
+                </a>
+                <nav class="hidden md:flex space-x-8">
+                    <a href="index.html" class="font-medium text-light hover:text-primary transition-colors duration-300">首页</a>
+                    <a href="about.html" class="font-medium text-light hover:text-primary transition-colors duration-300">关于我们</a>
+                    <a href="booking.html" class="font-medium text-light hover:text-primary transition-colors duration-300">预约</a>
+                </nav>
+                <div class="flex items-center space-x-4">
+                    <a href="login.html" class="hidden md:inline-block px-5 py-2 bg-primary text-white font-medium rounded-lg hover:bg-primary/90 transition-colors duration-300 hover-scale">登录</a>
+                    <button class="md:hidden text-light" id="menu-toggle">
+                        <i class="fas fa-bars text-xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <!-- 移动端菜单 -->
+        <div class="md:hidden hidden bg-secondary absolute w-full left-0 top-full" id="mobile-menu">
+            <div class="container mx-auto px-4 py-3 space-y-3">
+                <a href="index.html" class="block py-2 font-medium text-light hover:text-primary transition-colors duration-300">首页</a>
+                <a href="about.html" class="block py-2 font-medium text-light hover:text-primary transition-colors duration-300">关于我们</a>
+                <a href="booking.html" class="block py-2 font-medium text-light hover:text-primary transition-colors duration-300">预约</a>
+                <a href="login.html" class="block py-2 font-medium text-primary hover:text-primary/80 transition-colors duration-300">登录</a>
+            </div>
+        </div>
+    </header>
+
+    <main class="pt-24 pb-16">
+        <!-- 登录表单 -->
+        <section class="py-10 md:py-16 flex flex-col items-center justify-center min-h-[80vh]">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8 max-w-md">
+                <div class="bg-secondary rounded-2xl p-8 md:p-10 border border-light/10 transition-shadow duration-300">
+                    <div class="text-center mb-8">
+                        <div class="w-16 h-16 bg-primary/20 rounded-full flex items-center justify-center mx-auto mb-4 text-primary">
+                            <i class="fas fa-sign-in-alt text-2xl"></i>
+                        </div>
+                        <h2 class="text-2xl md:text-3xl font-bold text-light mb-2">用户登录</h2>
+                        <p class="text-light/70">请使用手机号和验证码登录</p>
+                    </div>
+                    <form id="login-form" class="space-y-6">
+                        <div class="space-y-4">
+                            <div>
+                                <label for="phone" class="block text-sm font-medium text-light mb-1">手机号</label>
+                                <div class="relative">
+                                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-light/50">
+                                        <i class="fas fa-phone"></i>
+                                    </div>
+                                    <input type="tel" id="phone" name="phone" class="form-input w-full pl-10 pr-4 py-3 bg-dark border border-light/20 text-light rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/30" placeholder="请输入手机号" pattern="^1[3-9]\d{9}$" required>
+                                </div>
+                            </div>
+                            <div>
+                                <label for="code" class="block text-sm font-medium text-light mb-1">验证码</label>
+                                <div class="relative">
+                                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-light/50">
+                                        <i class="fas fa-code"></i>
+                                    </div>
+                                    <input type="text" id="code" name="code" class="form-input w-full pl-10 pr-32 py-3 bg-dark border border-light/20 text-light rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/30" placeholder="请输入验证码" pattern="^\d{6}$" required>
+                                    <button type="button" id="get-code-btn" class="absolute inset-y-0 right-0 px-4 flex items-center justify-center bg-primary text-white font-medium rounded-r-lg hover:bg-primary/90 transition-colors duration-300 whitespace-nowrap">
+                                        获取验证码
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <button type="submit" class="w-full py-3 bg-primary text-white font-medium rounded-lg hover:bg-primary/90 transition-colors duration-300 hover-scale flex items-center justify-center">
+                            <i class="fas fa-arrow-right mr-2"></i> 登录
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- 页脚 -->
+    <footer class="bg-secondary text-white py-12">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div class="md:col-span-1">
+                    <div class="flex items-center space-x-2 mb-4">
+                        <div class="w-10 h-10 bg-white rounded-lg flex items-center justify-center text-primary">
+                            <i class="fas fa-robot text-xl"></i>
+                        </div>
+                        <span class="text-xl font-bold text-white">AI科技</span>
+                    </div>
+                    <p class="text-white/60 mb-4">
+                        专注AI智能体开发与企业AI工作赋能
+                    </p>
+                    <div class="flex space-x-4">
+                        <a href="#" class="text-white/60 hover:text-white transition-colors duration-300">
+                            <i class="fab fa-weixin text-xl"></i>
+                        </a>
+                        <a href="#" class="text-white/60 hover:text-white transition-colors duration-300">
+                            <i class="fab fa-weibo text-xl"></i>
+                        </a>
+                        <a href="#" class="text-white/60 hover:text-white transition-colors duration-300">
+                            <i class="fab fa-linkedin text-xl"></i>
+                        </a>
+                    </div>
+                </div>
+                <div>
+                    <h3 class="text-lg font-bold mb-4">快速链接</h3>
+                    <ul class="space-y-2">
+                        <li><a href="index.html" class="text-white/60 hover:text-white transition-colors duration-300">首页</a></li>
+                        <li><a href="about.html" class="text-white/60 hover:text-white transition-colors duration-300">关于我们</a></li>
+                        <li><a href="#services" class="text-white/60 hover:text-white transition-colors duration-300">业务服务</a></li>
+                        <li><a href="booking.html" class="text-white/60 hover:text-white transition-colors duration-300">预约定制</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-lg font-bold mb-4">联系我们</h3>
+                    <ul class="space-y-2">
+                        <li class="flex items-start space-x-2">
+                            <i class="fas fa-map-marker-alt text-white/60 mt-1"></i>
+                            <span class="text-white/60">北京市海淀区科技园区</span>
+                        </li>
+                        <li class="flex items-center space-x-2">
+                            <i class="fas fa-phone text-white/60"></i>
+                            <span class="text-white/60">400-123-4567</span>
+                        </li>
+                        <li class="flex items-center space-x-2">
+                            <i class="fas fa-envelope text-white/60"></i>
+                            <span class="text-white/60">contact@aitech.com</span>
+                        </li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-lg font-bold mb-4">法律信息</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-white/60 hover:text-white transition-colors duration-300">隐私政策</a></li>
+                        <li><a href="#" class="text-white/60 hover:text-white transition-colors duration-300">服务条款</a></li>
+                        <li><a href="#" class="text-white/60 hover:text-white transition-colors duration-300">法律声明</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="border-t border-white/10 mt-10 pt-6 text-center text-white/40 text-sm">
+                <p>© 2023 AI科技. 保留所有权利.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- 提示弹窗 -->
+    <div class="toast" id="toast"></div>
+
+    <script>
+        // 页面加载动画
+        window.addEventListener('load', function() {
+            setTimeout(function() {
+                document.getElementById('loader').classList.add('hidden');
+            }, 1000);
+        });
+
+        // 导航栏滚动效果
+        window.addEventListener('scroll', function() {
+            const navbar = document.getElementById('navbar');
+            if (window.scrollY > 50) {
+                navbar.classList.add('py-2');
+                navbar.classList.add('shadow');
+                navbar.classList.remove('py-4');
+            } else {
+                navbar.classList.add('py-4');
+                navbar.classList.remove('py-2');
+                navbar.classList.remove('shadow');
+            }
+        });
+
+        // 移动端菜单切换
+        document.getElementById('menu-toggle').addEventListener('click', function() {
+            const mobileMenu = document.getElementById('mobile-menu');
+            mobileMenu.classList.toggle('hidden');
+        });
+
+        // 验证码倒计时功能
+        const getCodeBtn = document.getElementById('get-code-btn');
+        let countdownTimer = null;
+        let countdownSeconds = 60;
+
+        getCodeBtn.addEventListener('click', function() {
+            const phoneInput = document.getElementById('phone');
+            const phone = phoneInput.value.trim();
+
+            // 验证手机号
+            if (!/^1[3-9]\d{9}$/.test(phone)) {
+                showToast('请输入正确的手机号');
+                phoneInput.focus();
+                return;
+            }
+
+            // 模拟发送验证码
+            showToast('验证码发送成功');
+
+            // 开始倒计时
+            getCodeBtn.disabled = true;
+            getCodeBtn.classList.add('bg-secondary');
+            getCodeBtn.classList.remove('bg-primary', 'hover:bg-primary/90');
+            getCodeBtn.textContent = `${countdownSeconds}秒后重新获取`;
+
+            countdownTimer = setInterval(function() {
+                countdownSeconds--;
+                getCodeBtn.textContent = `${countdownSeconds}秒后重新获取`;
+
+                if (countdownSeconds <= 0) {
+                    clearInterval(countdownTimer);
+                    getCodeBtn.disabled = false;
+                    getCodeBtn.classList.remove('bg-secondary');
+                    getCodeBtn.classList.add('bg-primary', 'hover:bg-primary/90');
+                    getCodeBtn.textContent = '获取验证码';
+                    countdownSeconds = 60;
+                }
+            }, 1000);
+        });
+
+        // 表单提交
+        document.getElementById('login-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const phone = document.getElementById('phone').value.trim();
+            const code = document.getElementById('code').value.trim();
+
+            // 验证表单
+            if (!/^1[3-9]\d{9}$/.test(phone)) {
+                showToast('请输入正确的手机号');
+                return;
+            }
+
+            if (!/^\d{6}$/.test(code)) {
+                showToast('请输入正确的验证码');
+                return;
+            }
+
+            // 模拟登录成功
+            showToast('登录成功');
+
+            // 延迟跳转到预约页面
+            setTimeout(function() {
+                window.location.href = 'booking.html';
+            }, 1500);
+        });
+
+        // 显示提示弹窗
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.classList.add('show');
+
+            setTimeout(function() {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+    </script>
+</body>
+</html>
